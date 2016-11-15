@@ -1,0 +1,27 @@
+{
+    "name": "edpsistemas/logtailer",
+    "description": "Logfile tailer PHP implementation",
+    "type": "project",
+    "require": {
+        "symfony/console": "^3.1",
+        "php": "^5.6"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.6",
+        "friendsofphp/php-cs-fixer": "^1.12",
+        "squizlabs/php_codesniffer": "^2.7",
+        "phpmd/phpmd": "^2.4"
+    },
+    "license": "GPL v3",
+    "authors": [
+        {
+            "name": "Ciro Souza",
+            "email": "ciro.souza@edpsistemas.com.br"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+		"EDP\\LogTailer\\": "src/"
+	}
+    }
+}

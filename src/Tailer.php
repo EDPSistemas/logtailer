@@ -2,6 +2,9 @@
 
 namespace EDP\LogTailer;
 
+use InvalidArgumentException;
+use UnexpectedValueException;
+
 class Tailer
 {
     protected $filename;

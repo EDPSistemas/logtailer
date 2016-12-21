@@ -1,0 +1,6 @@
+outputs: 
+    mail: 
+        from: root@stangerson.edpsistemas.com.br
+        recipients: 
+            - ciro.mies@gmail.com 
+            - infra@edpsistemas.com.br

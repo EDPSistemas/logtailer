@@ -8,7 +8,7 @@ use UnexpectedValueException;
 class Tailer
 {
     protected $filename;
-    protected $interval = 1;
+    protected $interval = 10;
 
     protected $file;
     protected $offset;
@@ -77,7 +77,7 @@ class Tailer
         $buffer = [];
 
         if (!$this->file) {
-            throw new Exception();
+            throw new UnexpectedValueException("File {$this->filename} not found or could not be opened");
         }
 
         fseek($this->file, $this->offset);

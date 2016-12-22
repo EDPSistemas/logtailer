@@ -2,31 +2,70 @@
 
 namespace EDP\LogTailer\Commands;
 
+use InvalidArgumentException;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-
-use EDP\LogTailer\Outputs\Mail;
 use EDP\LogTailer\Tailer;
+use EDP\LogTailer\Outputs\OutputFactory;
 
 class Tail extends Command
 {
     protected function configure()
     {
-
-    $this
+        $this
         ->setName('app:tail')
-        ->setDescription('Tail one or more files and process the output')
-        ->setHelp('Tail one or more files and process the output');
+        ->setDescription('Tail one file and process the output')
+        ->setHelp('Tail one file and process the output')
+        ->setDefinition(
+            new InputDefinition([
+                new InputOption('file', 'f', InputOption::VALUE_REQUIRED),
+                new InputOption('output', 'o', InputOption::VALUE_REQUIRED),
+                ])
+        );
+    }
 
+    public function initialize(InputInterface $input, OutputInterface $output)
+    {
+        if (!$input->getOption('file')) {
+            throw new InvalidArgumentException('File must be provided');
+        }
+
+        if (!$input->getOption('output')) {
+            throw new InvalidArgumentException('Output type must be provided');
+        }
+
+        if (!array_key_exists($input->getOption('output'), OutputFactory::$outputs)) {
+            throw new InvalidArgumentException('Output type must be supported: ['.implode(', ', array_keys($this->outputs)).']');
+        }
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $tailer = new Tailer('./coisa');
-        $mail = new Mail($tailer);
-        $mail->addRecipient('ciro.mies@gmail.com');
+        //@todo: isso só é usado aqui, precisa mover para um singleton
+        global $config;
+        $optionFile = $input->getOption('file');
+        $optionOutput = $input->getOption('output');
 
-        $mail->run();
+        if (!array_key_exists($optionOutput, $value['outputs'])) {
+            throw new \Exception("Configuration for $optionOutput not found");
+        }
+
+        $tailer = new Tailer($optionFile);
+        $options = $value['outputs'][$optionOutput];
+        $output = OutputFactory::create($optionOutput, $options);
+
+        $tailer->open();
+        while (true) {
+            $lines = $tailer->read();
+
+            if (!empty($lines)) {
+                $output->out($lines);
+            }
+
+            $tailer->sleep();
+        }
     }
 }

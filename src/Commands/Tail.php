@@ -38,7 +38,7 @@ class Tail extends Command
         }
 
         if (!array_key_exists($input->getOption('output'), OutputFactory::$outputs)) {
-            throw new InvalidArgumentException('Output type must be supported: ['.implode(', ', array_keys($this->outputs)).']');
+            throw new InvalidArgumentException('Output type must be supported: ['.implode(', ', array_keys(OutputFactory::$outputs)).']');
         }
     }
 
@@ -49,12 +49,12 @@ class Tail extends Command
         $optionFile = $input->getOption('file');
         $optionOutput = $input->getOption('output');
 
-        if (!array_key_exists($optionOutput, $value['outputs'])) {
+        if (!array_key_exists($optionOutput, $config['outputs'])) {
             throw new \Exception("Configuration for $optionOutput not found");
         }
 
         $tailer = new Tailer($optionFile);
-        $options = $value['outputs'][$optionOutput];
+        $options = $config['outputs'][$optionOutput];
         $output = OutputFactory::create($optionOutput, $options);
 
         $tailer->open();

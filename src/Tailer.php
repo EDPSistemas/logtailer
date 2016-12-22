@@ -26,17 +26,17 @@ class Tailer
     public function setFilename($filename)
     {
         if (empty($filename)) {
-            throw new InvalidArgumentException('Arquivo não fornecido');
+            throw new InvalidArgumentException('Filename not supplied');
         }
 
         $filename = realpath($filename);
 
         if (empty($filename)) {
-            throw new UnexpectedValueException('Arquivo não encontrado');
+            throw new UnexpectedValueException('File not found');
         }
 
         if (!is_readable($filename)) {
-            $msg = sprintf('Arquivo %s sem permissão de leitura', $filename);
+            $msg = sprintf('File %s: forbidden access', $filename);
             throw new UnexpectedValueException($msg);
         }
 
